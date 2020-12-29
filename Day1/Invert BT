@@ -1,0 +1,21 @@
+```
+class Solution {
+    public TreeNode invertTree(TreeNode root) {
+        if(root==null) return null;
+        if(root.left!=null && root.right!=null){
+            TreeNode temp= root.left;// we will swap the left and right part
+            root.left= invertTree(root.right);// save the left at right, and right at left
+            root.right= invertTree(temp);    
+        }
+        else if(root.left!=null){// if right child is null then 
+            root.right= invertTree(root.left);// put left part in right
+            root.left=null;// and left as null
+        }
+        else if(root.right!=null){ // vice-versa
+            root.left= invertTree(root.right);
+            root.right=null;
+        }
+        return root;
+    }
+}
+```
