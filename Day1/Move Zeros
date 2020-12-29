@@ -1,0 +1,16 @@
+```
+class Solution {
+    public void moveZeroes(int[] nums) {
+        int index=0;
+        for(int i=0;i<nums.length;i++){
+            if(nums[i]!=0){// we will shift all the non zero values to right
+                nums[index]=nums[i];
+                index++;// keep on increasing the index as well
+            }
+        }
+        for(int i= index; i<nums.length;i++){ //now we will replace all the remaing indexes with zero
+            nums[i]=0;
+        }
+    }
+}
+```
