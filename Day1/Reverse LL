@@ -1,0 +1,18 @@
+we have 3 node: prev, head, next(n)
+every time head will point to prev, and everything will shift by 1 place i.e. prev=head, head= next, n=head.next, until head==null
+```
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        if(head==null)return null;
+        ListNode prev= null;
+        ListNode n;
+        while(head!=null){
+            n=head.next;
+            head.next=prev;
+            prev=head;
+            head=n;
+        }
+        return prev;
+    }
+}
+```
