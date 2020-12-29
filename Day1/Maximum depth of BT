@@ -1,0 +1,10 @@
+```
+class Solution {
+    public int maxDepth(TreeNode root) {
+        if(root==null) return 0; // if node dosn't exist return 0
+        return 1+Math.max(maxDepth(root.left), maxDepth(root.right));
+		// we will tell the left and right child to go and find there length
+		//then we will find the max of them and add 1 for root node
+    }
+}
+```
