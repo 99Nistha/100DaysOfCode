@@ -1,0 +1,15 @@
+```
+class Solution {
+    public int height(TreeNode root){
+        if(root==null) return 0;
+        return 1+Math.max(height(root.left), height(root.right));// height will be max of right and left
+    }
+    public int diameterOfBinaryTree(TreeNode root) {
+        if(root==null) return 0;
+        int withRoot= height(root.left)+ height(root.right);// if max diameter goes through root node we will just add height of left and height of right
+        int leftRoot= diameterOfBinaryTree(root.left);// if max diameter lies in left child, than just apply the diameter function in the left part
+        int rightRoot= diameterOfBinaryTree(root.right);// similarly if lies in right go for right
+        return Math.max(withRoot,Math.max(leftRoot,rightRoot));// find max of all 3
+    }
+}
+```
