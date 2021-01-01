@@ -1,0 +1,22 @@
+```
+class Solution {
+    public int maxSubArray(int[] nums) {
+        int j=0;
+        int max=Integer.MIN_VALUE;  
+        for(j=0;j<nums.length;j++){ // we are using this loop to check whether all values are negative
+            if(nums[j]>0) break; // if there is atleast one non negative value then we will use break
+            max=Math.max(max, nums[j]); 
+        }
+        if(j==nums.length)return max; //we are taking this case if all the values are negative
+        max=0;
+        int finmax=0;
+        for(int i=0;i<nums.length;i++){
+            if((max+nums[i])<0) max=0;  //if the overall sum is negative then max=0
+            else max=max+nums[i];
+            finmax=Math.max(finmax, max);  // save the temporary max value in finmax            
+            //System.out.println(max+","+finmax);
+        }
+        return finmax;
+    }
+}
+```
