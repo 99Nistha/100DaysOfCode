@@ -1,0 +1,43 @@
+our aim is to reverse the LL from middle and then check if the first half and second half are same or not i.e
+LL: 1->2->3->4->4->3->2->1
+after mid revers:   1->2->3->4->1->2->3->4
+now lets  check  if ^ and middle ^ are same if yes, then move to next and check the same
+```
+class Solution {
+    public ListNode reverse(ListNode head){  // this fun is to reverse a LL
+        ListNode prev=null;
+        ListNode n;
+        while(head!=null){
+            n=head.next;
+            head.next=prev;
+            prev=head;
+            head=n;
+        }
+        return prev;
+    }
+    public boolean isPalindrome(ListNode head) {
+        if(head==null) return true;
+        ListNode A=head;
+        int length=0;
+        while(A!=null){ //finding length
+            A=A.next;
+            length++;
+        }
+        A=head;
+        int mid=(length/2);
+        while(mid!=0){  // traversing to middle
+            A=A.next;
+            mid--;
+        }
+        A=reverse(A);  //reversinf from middle to end and saving it in A
+        mid=length/2;
+        while(mid!=0){
+            if(head.val!=A.val)return false; // now check is the values are same
+            head=head.next;    //if yes then move to next node
+            A=A.next;
+            mid--;
+        }
+        return true;
+    }
+}
+```
