@@ -1,0 +1,40 @@
+ 
+```
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        if(headA==null|| headB==null) return null;
+        ListNode A= headA;
+        int Alength=0;
+        while(A.next!=null){
+            A=A.next;
+            Alength++;              // find the length of A
+        }
+        ListNode B= headB;
+        int Blength=0;
+        while(B.next!=null){
+            B=B.next;
+            Blength++;          // find length of B
+        }
+        if(Blength>Alength){     //traverse the longer length to the same point as the others start point
+            int diff=Blength-Alength;
+            while(diff!=0){
+                headB=headB.next;
+                diff--;
+            }
+        }
+        else{
+            int diff=Alength-Blength; //traverse the longer length to same point as the others start point
+            while(diff!=0){
+                headA=headA.next;
+                diff--;
+            }
+        }
+        while(headA!=null && headA!=headB){// now move to next node and check whether they are same or not, if not same then move to next node and so on,
+            headA=headA.next; 
+            headB=headB.next;//so we will leave this loop either we found a same node or there is no common point
+        }
+        if(headA==headB)return headA;    // same so print head
+        return null;  // else no common point
+    }
+}
+```
