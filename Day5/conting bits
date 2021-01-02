@@ -5,3 +5,17 @@ class Solution {
     return f;
 }
 }
+or
+class Solution {
+    public int[] countBits(int num) {
+        int[] f = new int[num + 1];
+        for (int i=1; i<=num; i++){
+            int j=i;
+            while(j!=0){
+                f[i]+=j&1;
+                j=j>>1;
+            }
+        }
+        return f;
+    }
+}
