@@ -1,46 +1,100 @@
 class Solution {
-    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
-        Set<String> beginSet = new HashSet<String>(), endSet = new HashSet<String>();
-        int len = 1;
-        int strLen = beginWord.length();
-        HashSet<String> visited = new HashSet<String>();
 
-        beginSet.add(beginWord);
-        endSet.add(endWord);
-        while (!beginSet.isEmpty() && !endSet.isEmpty()) {
-            if (beginSet.size() > endSet.size()) {
-                Set<String> set = beginSet;
-                beginSet = endSet;
-                endSet = set;
-            }
+  private int L;
+  private Map<String, List<String>> allComboDict;
 
-            Set<String> temp = new HashSet<String>();
-            for (String word : beginSet) {
-                char[] chs = word.toCharArray();
+  Solution() {
+    this.L = 0;
 
-                for (int i = 0; i < chs.length; i++) {
-                    for (char c = 'a'; c <= 'z'; c++) {
-                        char old = chs[i];
-                        chs[i] = c;
-                        String target = String.valueOf(chs);
+    // Dictionary to hold combination of words that can be formed,
+    // from any given word. By changing one letter at a time.
+    this.allComboDict = new HashMap<>();
+  }
 
-                        if (endSet.contains(target)) {
-                            return len + 1;
-                        }
+  private int visitWordNode(
+      Queue<Pair<String, Integer>> Q,
+      Map<String, Integer> visited,
+      Map<String, Integer> othersVisited) {
 
-                        if (!visited.contains(target) && wordList.contains(target)) {
-                            temp.add(target);
-                            visited.add(target);
-                        }
-                        chs[i] = old;
-                    }
-                }
-            }
+    Pair<String, Integer> node = Q.remove();
+    String word = node.getKey();
+    int level = node.getValue();
 
-            beginSet = temp;
-            len++;
+    for (int i = 0; i < this.L; i++) {
+
+      // Intermediate words for current word
+      String newWord = word.substring(0, i) + '*' + word.substring(i + 1, L);
+
+      // Next states are all the words which share the same intermediate state.
+      for (String adjacentWord : this.allComboDict.getOrDefault(newWord, new ArrayList<>())) {
+        // If at any point if we find what we are looking for
+        // i.e. the end word - we can return with the answer.
+        if (othersVisited.containsKey(adjacentWord)) {
+          return level + othersVisited.get(adjacentWord);
         }
 
-        return 0;
+        if (!visited.containsKey(adjacentWord)) {
+
+          // Save the level as the value of the dictionary, to save number of hops.
+          visited.put(adjacentWord, level + 1);
+          Q.add(new Pair(adjacentWord, level + 1));
+        }
+      }
     }
+    return -1;
+  }
+
+  public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+
+    if (!wordList.contains(endWord)) {
+      return 0;
+    }
+
+    // Since all words are of same length.
+    this.L = beginWord.length();
+
+    wordList.forEach(
+        word -> {
+          for (int i = 0; i < L; i++) {
+            // Key is the generic word
+            // Value is a list of words which have the same intermediate generic word.
+            String newWord = word.substring(0, i) + '*' + word.substring(i + 1, L);
+            List<String> transformations =
+                this.allComboDict.getOrDefault(newWord, new ArrayList<>());
+            transformations.add(word);
+            this.allComboDict.put(newWord, transformations);
+          }
+        });
+
+    // Queues for birdirectional BFS
+    // BFS starting from beginWord
+    Queue<Pair<String, Integer>> Q_begin = new LinkedList<>();
+    // BFS starting from endWord
+    Queue<Pair<String, Integer>> Q_end = new LinkedList<>();
+    Q_begin.add(new Pair(beginWord, 1));
+    Q_end.add(new Pair(endWord, 1));
+
+    // Visited to make sure we don't repeat processing same word.
+    Map<String, Integer> visitedBegin = new HashMap<>();
+    Map<String, Integer> visitedEnd = new HashMap<>();
+    visitedBegin.put(beginWord, 1);
+    visitedEnd.put(endWord, 1);
+
+    while (!Q_begin.isEmpty() && !Q_end.isEmpty()) {
+
+      // One hop from begin word
+      int ans = visitWordNode(Q_begin, visitedBegin, visitedEnd);
+      if (ans > -1) {
+        return ans;
+      }
+
+      // One hop from end word
+      ans = visitWordNode(Q_end, visitedEnd, visitedBegin);
+      if (ans > -1) {
+        return ans;
+      }
+    }
+
+    return 0;
+  }
 }
